@@ -39,7 +39,7 @@ jobs:
         with:
           push: true
           # tags: <registry server url>/<app name>:<git commit sha>
-          tags: raydemo0802.azurecr.io/hello-world-app:${{ github.sha }}
+          tags: acrgithubaction.azurecr.io/hello-world-app:${{ github.sha }}
           file: ./Dockerfile
       
   deployToAKS:
@@ -56,25 +56,31 @@ jobs:
         uses: actions/checkout@v3
         
       # Logs in with your Azure credentials
+      #openid login 是最简单的方法
+      #要先建一个 app registion ，服务有自己服务的账号，
+      #Azure 登录操作负责与 Azure 的身份验证服务器交互，并使用 OpenID Connect 协议获取访问令牌和 ID 令牌。
+      #这样，您可以在应用程序中使用这些令牌，而无需手动处理复杂的身份验证和授权逻辑。
       - name: Azure login
         uses: azure/login@v1.4.6
         with:
-          client-id: '205beffb-96a5-4ee7-8c82-ab42f85f430a'
-          tenant-id: '05a141a6-f9b0-43a2-a0d0-ee2ed9348938'
-          subscription-id: '52ddba82-9f78-4f67-bc45-94f9aa09bfb4'
+          client-id: '2d4632f6-8cec-42a8-b13c-3066279cfbf7'
+          tenant-id: 'c7aec8f6-7e9d-4aee-9154-095223956b9d'
+          subscription-id: '87d5a4eb-0982-494e-9aeb-481e3bddcdbb'
+        #上面的id 都是从 app registration来得到的
         
       - name: Setup kubelogin
         uses: Azure/use-kubelogin@v1
         with:
           kubelogin-version: 'v0.0.25'
-
+#search  azure  kubelogin 
+#读取aks的context信息。
       - name: Azure Kubernetes set context
         uses: Azure/aks-set-context@v3
         with:
           # Resource Group Name
-          resource-group: 'github-action-rg'
+          resource-group: 'rg-githubaction'
           # AKS Cluster Name
-          cluster-name: 'rayk8s0802demo'
+          cluster-name: 'aks-githubaction'
           # AKS Cluster Subscription
           subscription: '52ddba82-9f78-4f67-bc45-94f9aa09bfb4'
           # Get cluster admin credentials. Values: true or false
@@ -88,7 +94,7 @@ jobs:
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           CONTAINER_NAME: hello-world-app:${{ github.sha }}
-          AZURE_CONTAINER_REGISTRY: raydemo0802.azurecr.io
+          AZURE_CONTAINER_REGISTRY: acrgithubaction.azurecr.io
         with:
           # File to run substitutions on
           input: 
@@ -106,4 +112,4 @@ jobs:
             hello-world-deployment.yaml
             kubernetes/hello-world-service.yaml
           images: |
-            raydemo0802.azurecr.io/hello-world-app:${{ github.sha }}
+            acrgithubaction.azurecr.io/hello-world-app:${{ github.sha }}
