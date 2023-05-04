@@ -64,7 +64,7 @@ jobs:
         uses: azure/login@v1.4.6
         with:
           client-id: '2d4632f6-8cec-42a8-b13c-3066279cfbf7'
-          tenant-id: 'c7aec8f6-7e9d-4aee-9154-095223956b9d'
+          tenant-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         #上面的id 都是从 app registration来得到的
         
