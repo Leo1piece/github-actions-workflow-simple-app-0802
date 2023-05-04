@@ -8,7 +8,7 @@ on:
   push:
     branches: ['master']
   workflow_dispatch:
-
+#手动trigger 
 permissions:
   contents: read
   
@@ -16,9 +16,11 @@ jobs:
   buildImage:
     runs-on: ubuntu-latest
     steps:
+         #新建docker 环境 搜索 build and push docker images 获得
+         #https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Check out repository code
         uses: actions/checkout@v3
-      
+ 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         
@@ -26,7 +28,7 @@ jobs:
         uses: Azure/docker-login@v1
         with:
           # Container registry username
-          username: 'raydemo0802'
+          username: 'acrgithubaction'
           # Container registry password
           password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
           # Container registry server url
